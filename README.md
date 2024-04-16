@@ -42,7 +42,3 @@ Distributed under the `<LICENSE>` License. See `LICENSE` file for more informati
 Special thanks to JetBrains for the free GoLand license for open source and educational learning.
 
 [<img src="./jetbrains-variant-3.png" width="200"/>]()
-
-Be sure to customize each part with the actual details of your FRP Management Panel API, its authentication method, 
-and endpoint information. It’s important to provide clear, detailed guidelines for consumers of your API, 
-so they can integrate with it effectively.
