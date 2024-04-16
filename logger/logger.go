@@ -44,15 +44,12 @@ func logTypeImpl(typeStr string, format string, a ...any) {
 	case "error":
 		color = Red
 		tip = "ERROR"
-		break
 	case "warn":
 		color = Yellow
 		tip = "WARN"
-		break
 	case "success":
 		color = Green
 		tip = "DONE"
-		break
 	}
 	logImpl(Reset+"["+getNowTimeString()+"] |"+color+tip+Reset+"|"+": "+format+"\n"+Reset, a...)
 }

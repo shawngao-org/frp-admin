@@ -165,6 +165,9 @@ func nacosMain(config Config) {
 			}
 		},
 	})
+	if err != nil {
+		logger.LogErr("Failed to listen config.")
+	}
 	configMutex.Lock()
 	Conf = parseContent2Config([]byte(content))
 	configMutex.Unlock()
