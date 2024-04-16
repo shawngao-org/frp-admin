@@ -16,6 +16,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
 
+    - name: Code Lint
+      uses: golangci/golangci-lint-action@v2
+      with:
+        version: latest
+        args: --new-from-rev=HEAD~ --timeout 5m
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
