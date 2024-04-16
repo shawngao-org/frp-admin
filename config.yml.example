@@ -1,0 +1,75 @@
+# 服务器相关配置
+server:
+  # 服务器监听的IP地址
+  ip: 0.0.0.0
+  # 监听的端口号
+  port: 8089
+# 数据库相关配置
+database:
+  # MySQL
+  mysql:
+    # MySQL 主机地址
+    host: 127.0.0.1
+    # MySQL 端口(默认3306)
+    port: 3306
+    # 数据库名称
+    db: cloud_lock
+    # 用户
+    user: root
+    # 密码
+    password: mL&VFW3US
+  # Redis
+  redis:
+    # Redis 主机地址
+    host: 127.0.0.1
+    # Redis 端口号(默认6379)
+    port: 6379
+    # 数据库序号(默认0)
+    db: 0
+    # Redis 密码(默认为空)
+    password: ''
+# 安全相关配置
+security:
+  # 密码
+  password:
+    # 加密方式: hmac512(需要私钥), hmac256(需要私钥), sha224(不需要私钥), sha256(不需要私钥), sha384(不需要私钥), sha512(不需要私钥),
+    # bcrypt(不需要私钥, 需要提供哈希次数 -> cost)
+    method: bcrypt
+    secret: 'raeHJ?qF>xZt3^)y-^pJUzUmfHE.02LE'
+    const: 14
+  # JWT
+  jwt:
+    # 加密 JWT 的私钥
+    secret: 'h*Gq>Cu.0-G38oPti+-PkqA}s.g,69^t'
+    # JWT 的过期时间(秒)
+    timeout: 2592000
+  # RSA
+  rsa:
+    # 公钥路径
+    public: ./public.pem
+    # 私钥路径
+    private: ./private.pem
+# NacOS 统一配置中心
+nacos:
+  # 是否启用统一配置
+  enable: false
+  # NacOS 主机地址
+  ip: 10.4.61.203
+  # NacOS 端口号(默认8848)
+  port: 8848
+  # 用户名
+  username: nacos
+  # 密码
+  password: Ahhhjtll1125
+  # 命名空间
+  namespace: 0ead3860-538a-4029-8246-7b95f20ff526
+  # 配置文件所属组
+  group: dev
+  # 配置文件的数据编号
+  dataId: gin-config.yaml
+  # 超时时长
+  timeout: 5000
+  # 日志级别
+  loglevel: debug
+# 开发者模式(开发者模式会绕过所有的权限认证)
+develop: false
