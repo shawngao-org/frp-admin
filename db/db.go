@@ -40,7 +40,7 @@ func Connect() {
 
 func GetTableList() map[string]any {
 	tables := make(map[string]any)
-	tables["group"] = &entity.Group{}
+	tables["groups"] = &entity.Group{}
 	tables["users"] = &entity.User{}
 	tables["invites"] = &entity.Invite{}
 	tables["nodes"] = &entity.Node{}
