@@ -16,6 +16,8 @@ var (
 	Db           *gorm.DB
 )
 
+var Tables map[string]any
+
 func Connect() {
 	host := config.Conf.Database.Mysql.Host
 	port := config.Conf.Database.Mysql.Port
@@ -34,8 +36,8 @@ func Connect() {
 	connectMutex.Lock()
 	Db = dsn
 	connectMutex.Unlock()
-	tables := GetTableList()
-	CheckTables(tables)
+	Tables = GetTableList()
+	CheckTables()
 }
 
 func GetTableList() map[string]any {
@@ -49,8 +51,8 @@ func GetTableList() map[string]any {
 	return tables
 }
 
-func CheckTables(tables map[string]any) {
-	for k, v := range tables {
+func CheckTables() {
+	for k, v := range Tables {
 		if !Db.Migrator().HasTable(k) {
 			logger.LogWarn("Table [%s] does not exists. Creating...", k)
 			err := Db.Set("gorm:table_options", "ENGINE=InnoDB").Migrator().CreateTable(v)
@@ -61,4 +63,19 @@ func CheckTables(tables map[string]any) {
 			logger.LogSuccess("Table [%s] has been created.", k)
 		}
 	}
+}
+
+func ReinitializeDatabase() {
+	for k, v := range Tables {
+		if Db.Migrator().HasTable(k) {
+			logger.LogWarn("Deleting table [%s] ...", k)
+			err := Db.Migrator().DropTable(v)
+			if err != nil {
+				logger.LogErr("Delete table [%s] failed.", k)
+				os.Exit(-1)
+			}
+			logger.LogSuccess("Table [%s] has been deleted.", k)
+		}
+	}
+	CheckTables()
 }
