@@ -22,8 +22,9 @@ type User struct {
 	Created      int64     `gorm:"<-:create;autoCreateTime;not null"`
 	Updated      int64     `gorm:"autoUpdateTime:milli;not null"`
 	// Foreign key
-	Invite   []Invite `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
-	Invitees Invite   `gorm:"foreignKey:Invitees;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
-	Limit    Limit    `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
-	Proxy    Proxy    `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
+	Invite           []Invite         `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
+	Invitees         Invite           `gorm:"foreignKey:Invitees;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
+	Limit            Limit            `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
+	Proxy            Proxy            `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
+	RouterPermission RouterPermission `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 }

@@ -5,6 +5,7 @@ import (
 	"frp-admin/db"
 	"frp-admin/logger"
 	"frp-admin/redis"
+	"frp-admin/server"
 	"os"
 )
 
@@ -23,6 +24,7 @@ func main() {
 	redis.Connect()
 	Args = GetCliArgs()
 	CommandHandler()
+	server.HandleServer()
 }
 
 func GetCliArgs() map[string]Cmd {
@@ -40,6 +42,9 @@ func GetCliArgs() map[string]Cmd {
 
 func CommandHandler() {
 	args := os.Args[1:]
+	if len(args) <= 2 {
+		return
+	}
 	for _, v := range args {
 		if value, ok := Args[v]; ok {
 			value.Executor()
@@ -48,4 +53,5 @@ func CommandHandler() {
 			os.Exit(-1)
 		}
 	}
+	os.Exit(0)
 }
