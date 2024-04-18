@@ -10,6 +10,8 @@ type User struct {
 	Id           string    `gorm:"<-:create;primary_key;type:varchar(36)"`
 	Name         string    `gorm:"type:varchar(16);not null;uniqueIndex:name_idx"`
 	Email        string    `gorm:"type:varchar(32);not null;uniqueIndex:email_idx"`
+	Password     string    `gorm:"type:varchar(128);not null"`
+	TotpKey      string    `gorm:"type:varchar(64);not null"`
 	IsValid      bool      `gorm:"default:false;not null"`
 	RegisterTime time.Time `gorm:"<-:create;not null"`
 	Ip           string    `gorm:"<-:create;type:varchar(39);not null;uniqueIndex:ip_idx"`
