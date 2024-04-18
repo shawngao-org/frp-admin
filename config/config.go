@@ -64,6 +64,9 @@ type Config struct {
 			Public  string `yaml:"public"`
 			Private string `yaml:"private"`
 		} `yaml:"rsa"`
+		Totp struct {
+			Issuer string `yaml:"issuer"`
+		} `yaml:"totp"`
 	} `yaml:"security"`
 	Nacos struct {
 		Enable    bool   `yaml:"enable"`

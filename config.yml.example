@@ -49,6 +49,8 @@ security:
     public: ./public.pem
     # 私钥路径
     private: ./private.pem
+  totp:
+    issuer: ''
 # NacOS 统一配置中心
 nacos:
   # 是否启用统一配置
