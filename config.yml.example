@@ -13,11 +13,11 @@ database:
     # MySQL 端口(默认3306)
     port: 3306
     # 数据库名称
-    db: cloud_lock
+    db: ''
     # 用户
-    user: root
+    user: ''
     # 密码
-    password: mL&VFW3US
+    password: ''
   # Redis
   redis:
     # Redis 主机地址
@@ -35,12 +35,12 @@ security:
     # 加密方式: hmac512(需要私钥), hmac256(需要私钥), sha224(不需要私钥), sha256(不需要私钥), sha384(不需要私钥), sha512(不需要私钥),
     # bcrypt(不需要私钥, 需要提供哈希次数 -> cost)
     method: bcrypt
-    secret: 'raeHJ?qF>xZt3^)y-^pJUzUmfHE.02LE'
-    const: 14
+    secret: ''
+    const: 10
   # JWT
   jwt:
     # 加密 JWT 的私钥
-    secret: 'h*Gq>Cu.0-G38oPti+-PkqA}s.g,69^t'
+    secret: ''
     # JWT 的过期时间(秒)
     timeout: 2592000
   # RSA
@@ -49,24 +49,26 @@ security:
     public: ./public.pem
     # 私钥路径
     private: ./private.pem
+  totp:
+    issuer: ''
 # NacOS 统一配置中心
 nacos:
   # 是否启用统一配置
   enable: false
   # NacOS 主机地址
-  ip: 10.4.61.203
+  ip: ''
   # NacOS 端口号(默认8848)
   port: 8848
   # 用户名
-  username: nacos
+  username: ''
   # 密码
-  password: Ahhhjtll1125
+  password: ''
   # 命名空间
-  namespace: 0ead3860-538a-4029-8246-7b95f20ff526
+  namespace: ''
   # 配置文件所属组
-  group: dev
+  group: ''
   # 配置文件的数据编号
-  dataId: gin-config.yaml
+  dataId: ''
   # 超时时长
   timeout: 5000
   # 日志级别

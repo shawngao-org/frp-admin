@@ -4,3 +4,5 @@ log
 config.yml
 frp-admin.exe
 frp-admin
+private.pem
+public.pem

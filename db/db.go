@@ -48,6 +48,8 @@ func GetTableList() map[string]any {
 	tables["nodes"] = &entity.Node{}
 	tables["limits"] = &entity.Limit{}
 	tables["proxies"] = &entity.Proxy{}
+	tables["routers"] = &entity.Router{}
+	tables["router_permissions"] = &entity.RouterPermission{}
 	return tables
 }
 
