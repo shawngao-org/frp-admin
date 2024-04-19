@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-func GenerateToken(id int64) (string, error) {
+func GenerateToken(id string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS512)
 	claims := token.Claims.(jwt.MapClaims)
 	claims["user"] = id

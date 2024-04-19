@@ -6,18 +6,38 @@ import (
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/pem"
+	"frp-admin/config"
 	"frp-admin/logger"
+	"os"
 )
 
-func Decrypted(key string, base64String string) string {
-	originStr, err := base64.StdEncoding.DecodeString(base64String)
+var PrivateKey string
+var PublicKey string
+
+func GetKeys() {
+	pri, err := os.ReadFile(config.Conf.Security.Rsa.Private)
+	if err != nil {
+		logger.LogErr("Unable to read private key file.")
+		os.Exit(-1)
+	}
+	PrivateKey = string(pri)
+	pub, err := os.ReadFile(config.Conf.Security.Rsa.Public)
+	if err != nil {
+		logger.LogErr("Unable to read public key file.")
+		os.Exit(-1)
+	}
+	PublicKey = string(pub)
+}
+
+func Decrypted(str string) string {
+	originStr, err := base64.StdEncoding.DecodeString(str)
 	if err != nil {
 		logger.LogErr("Unable to decode public key.")
 		logger.LogErr("%s", err)
 		return ""
 	}
 	cipherText := originStr
-	privateKeyBlock, _ := pem.Decode([]byte(key))
+	privateKeyBlock, _ := pem.Decode([]byte(PrivateKey))
 	privateKey, err := x509.ParsePKCS8PrivateKey(privateKeyBlock.Bytes)
 	if err != nil {
 		logger.LogErr("Unable to parse private key.")
@@ -37,9 +57,9 @@ func Decrypted(key string, base64String string) string {
 	return string(decryptedText)
 }
 
-func Encrypted(key string, str string) string {
+func Encrypted(str string) string {
 	plainText := []byte(str)
-	publicKeyBlock, _ := pem.Decode([]byte(key))
+	publicKeyBlock, _ := pem.Decode([]byte(PublicKey))
 	publicKey, err := x509.ParsePKIXPublicKey(publicKeyBlock.Bytes)
 	if err != nil {
 		logger.LogErr("Unable to parse public key.")

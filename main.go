@@ -6,6 +6,7 @@ import (
 	"frp-admin/logger"
 	"frp-admin/redis"
 	"frp-admin/server"
+	"frp-admin/util"
 	"os"
 )
 
@@ -20,6 +21,7 @@ var Args map[string]Cmd
 
 func main() {
 	config.GetConfig()
+	util.GetKeys()
 	db.Connect()
 	redis.Connect()
 	Args = GetCliArgs()
