@@ -12,11 +12,17 @@ import (
 
 func GetUserByEmail(email string) (entity.User, error) {
 	var user entity.User
-	db.Db.Table("users").Limit(1).Find(&user, "email = ?", email)
+	db.Db.First(&user, "email = ?", email)
 	if reflect.DeepEqual(user, entity.User{}) {
 		return entity.User{}, errors.New("user not found")
 	}
 	return user, nil
+}
+
+func CheckUserExists(name string, email string) bool {
+	var user entity.User
+	db.Db.First(&user, "name = ? OR email = ?", name, email)
+	return !reflect.DeepEqual(user, entity.User{})
 }
 
 func GetUserByEmailAndPasswd(email string, password string) (entity.User, error) {
