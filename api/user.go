@@ -93,6 +93,12 @@ func Register(ctx *gin.Context) {
 		})
 		return
 	}
+	if service.CheckUserExists(name, email) {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": "User already exists.",
+		})
+		return
+	}
 	user := entity.User{
 		Model:        gorm.Model{},
 		Id:           utils.NewUUID().String(),

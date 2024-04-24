@@ -19,6 +19,12 @@ func GetUserByEmail(email string) (entity.User, error) {
 	return user, nil
 }
 
+func CheckUserExists(name string, email string) bool {
+	var user entity.User
+	db.Db.First(&user, "name = ? OR email = ?", name, email)
+	return !reflect.DeepEqual(user, entity.User{})
+}
+
 func GetUserByEmailAndPasswd(email string, password string) (entity.User, error) {
 	user, err := GetUserByEmail(email)
 	if err != nil {
