@@ -4,15 +4,15 @@ paths:
   /api/v1/login:
     post:
       consumes:
-      - application/json
+      - multipart/form-data
       parameters:
       - description: Email
-        in: query
+        in: formData
         name: email
         required: true
         type: string
       - description: Password(RSA Encrypted)
-        in: query
+        in: formData
         name: password
         required: true
         type: string
@@ -41,4 +41,34 @@ paths:
       summary: Ping pong
       tags:
       - Ping
+  /api/v1/register:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Password(RSA Encrypted)
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Register
+      tags:
+      - User
 swagger: "2.0"
