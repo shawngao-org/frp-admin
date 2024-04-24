@@ -20,6 +20,7 @@ func RootRouter(r *gin.Engine) {
 	{
 		v1.GET("/ping", api.Ping)
 		v1.POST("/login", api.Login)
+		v1.POST("/register", api.Register)
 
 		docs.SwaggerInfo.Title = "API Docs"
 		docs.SwaggerInfo.Description = "null."
