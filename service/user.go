@@ -12,7 +12,7 @@ import (
 
 func GetUserByEmail(email string) (entity.User, error) {
 	var user entity.User
-	db.Db.Table("users").Limit(1).Find(&user, "email = ?", email)
+	db.Db.First(&user, "email = ?", email)
 	if reflect.DeepEqual(user, entity.User{}) {
 		return entity.User{}, errors.New("user not found")
 	}
