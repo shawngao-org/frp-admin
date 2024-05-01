@@ -147,3 +147,8 @@ func Login(ctx *gin.Context) {
 		"token":   token,
 	})
 }
+
+func SendTestMail(ctx *gin.Context) {
+	email := ctx.PostForm("email")
+	util.SendTestMail(email)
+}
