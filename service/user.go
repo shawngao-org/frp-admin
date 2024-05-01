@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"frp-admin/common"
 	"frp-admin/config"
 	"frp-admin/db"
 	"frp-admin/entity"
@@ -133,7 +134,7 @@ func Login(ctx *gin.Context) {
 		})
 		return
 	}
-	status := redis.Client.Set(ctx, user.Id, token, time.Duration(config.Conf.Security.Jwt.Timeout))
+	status := redis.Client.Set(common.Context, user.Id, token, time.Duration(config.Conf.Security.Jwt.Timeout)*time.Second)
 	if status.Err() != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{
 			"message":   http.StatusText(http.StatusInternalServerError),
