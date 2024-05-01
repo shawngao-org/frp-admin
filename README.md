@@ -31,6 +31,8 @@ You can configure proxies, manage connections, and retrieve logs using simple HT
 
 If you would like to contribute to the API, outline the steps you would like contributors to take.
 
+Tips: 可以使用中文进行沟通
+
 ## License
 
 Distributed under the `<LICENSE>` License. See `LICENSE` file for more information.
