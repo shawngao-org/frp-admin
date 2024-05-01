@@ -150,5 +150,19 @@ func Login(ctx *gin.Context) {
 
 func SendTestMail(ctx *gin.Context) {
 	email := ctx.PostForm("email")
-	util.SendTestMail(email)
+	validMsg := util.ValidateEmail(email)
+	if !util.IsPassValid(validMsg) {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": validMsg,
+		})
+		return
+	}
+	user, err := GetUserByEmail(email)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+		return
+	}
+	util.SendTestMail(user.Email)
 }
