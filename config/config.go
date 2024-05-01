@@ -40,6 +40,8 @@ type Config struct {
 			Port     string `yaml:"port"`
 			Db       int    `yaml:"db"`
 			Password string `yaml:"password"`
+			PoolSize int    `yaml:"pool-size"`
+			Timeout  uint64 `yaml:"timeout"`
 		} `yaml:"redis"`
 		Influxdb struct {
 			Enable bool   `yaml:"enable"`
