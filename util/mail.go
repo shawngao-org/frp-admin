@@ -80,16 +80,13 @@ func SendMail(toMail string, subject string, htmlBody string) {
 		password,
 		host,
 	)
-	err := SendMailUsingTLS(
+	SendMailUsingTLS(
 		fmt.Sprintf("%s:%d", host, port),
 		auth,
 		email,
 		[]string{toEmail},
 		[]byte(message),
 	)
-	if err != nil {
-		logger.LogErr("%s", err)
-	}
 }
 
 func Dial(addr string) (*smtp.Client, error) {
@@ -102,46 +99,63 @@ func Dial(addr string) (*smtp.Client, error) {
 	return smtp.NewClient(conn, host)
 }
 
-func SendMailUsingTLS(addr string, auth smtp.Auth, from string,
-	to []string, msg []byte) (err error) {
+func SendMailUsingTLS(addr string, auth smtp.Auth, from string, to []string, msg []byte) {
 	c, err := Dial(addr)
 	if err != nil {
 		logger.LogErr("Create SMTP client error: %s", err)
-		return err
+		return
 	}
-	defer func(c *smtp.Client) {
-		err := c.Close()
-		if err != nil {
-			logger.LogErr("%s", err)
+	isClosed := false
+	defer func() {
+		if !isClosed {
+			err := c.Quit() // 优雅地关闭SMTP会话
+			if err != nil {
+				// 如果出现错误，仅记录它，不影响err的返回值，因为邮件可能已经发送
+				logger.LogErr("Close SMTP client error: %s", err)
+			}
 		}
-	}(c)
+	}()
 	if auth != nil {
 		if ok, _ := c.Extension("AUTH"); ok {
 			if err = c.Auth(auth); err != nil {
 				logger.LogErr("Error during AUTH: %s", err)
-				return err
+				return
 			}
 		}
 	}
 	if err = c.Mail(from); err != nil {
-		return err
+		logger.LogErr("Error mail: %s", err)
+		return
 	}
 	for _, addr := range to {
 		if err = c.Rcpt(addr); err != nil {
-			return err
+			logger.LogErr("Error Rcpt: %s", err)
+			return
 		}
 	}
 	w, err := c.Data()
 	if err != nil {
-		return err
+		logger.LogErr("Error data: %s", err)
+		return
 	}
 	_, err = w.Write(msg)
 	if err != nil {
-		return err
+		logger.LogErr("Error write msg: %s", err)
+		return
 	}
 	err = w.Close()
 	if err != nil {
-		return err
+		logger.LogErr("Error close: %s", err)
+		return
 	}
-	return c.Quit()
+	err = c.Quit()
+	if err != nil {
+		logger.LogErr("Quit SMTP client error: %s", err)
+		err = c.Close()
+		if err != nil {
+			logger.LogErr("Close SMTP client error: %s", err)
+		}
+	}
+	// 设置标志表明连接已关闭
+	isClosed = true
 }
