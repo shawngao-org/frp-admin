@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"frp-admin/config"
 	"frp-admin/logger"
 	"frp-admin/redis"
@@ -20,7 +21,7 @@ func HandleServer() {
 		logger.LogInfo("[%s] => [%s]", router.Method, router.Path)
 	}
 	srv := &http.Server{
-		Addr:    config.Conf.Server.Ip + ":" + config.Conf.Server.Port,
+		Addr:    fmt.Sprintf("%s:%v", config.Conf.Server.Ip, config.Conf.Server.Port),
 		Handler: r,
 	}
 	go func() {

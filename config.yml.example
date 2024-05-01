@@ -4,6 +4,26 @@ server:
   ip: 127.0.0.1
   # Listen port
   port: 8089
+# Mail sender config
+mail:
+  # SMTP server ip address or domain name
+  host: ''
+  # SMTP port
+  # 465: TLS
+  # 25: Normal
+  port: 465
+  # Sender mail address
+  mail: ''
+  from-mail: ''
+  nick-name: 'FRP Admin'
+  # Sender mail password
+  password: ''
+  template:
+    -
+      # !!!!! Note !!!!!
+      # Don't delete this template config and file.
+      name: example-template
+      path: ./template/example-template.html
 # Database config
 database:
   # MySQL

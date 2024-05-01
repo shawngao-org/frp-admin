@@ -22,35 +22,41 @@ var (
 	Conf        Config
 )
 
+type Template struct {
+	Name string `yaml:"name"`
+	Path string `yaml:"path"`
+}
+
 type Config struct {
 	Server struct {
 		Ip   string `yaml:"ip"`
-		Port string `yaml:"port"`
+		Port uint64 `yaml:"port"`
+	} `yaml:"server"`
+	Mail struct {
+		Host     string     `yaml:"host"`
+		Port     uint64     `yaml:"port"`
+		Mail     string     `yaml:"mail"`
+		NickName string     `yaml:"nick-name"`
+		FromMail string     `yaml:"from-mail"`
+		Password string     `yaml:"password"`
+		Template []Template `yaml:"template"`
 	}
 	Database struct {
 		Mysql struct {
 			Host     string `yaml:"host"`
-			Port     string `yaml:"port"`
+			Port     uint64 `yaml:"port"`
 			Db       string `yaml:"db"`
 			User     string `yaml:"user"`
 			Password string `yaml:"password"`
 		} `yaml:"mysql"`
 		Redis struct {
 			Host     string `yaml:"host"`
-			Port     string `yaml:"port"`
+			Port     uint64 `yaml:"port"`
 			Db       int    `yaml:"db"`
 			Password string `yaml:"password"`
 			PoolSize int    `yaml:"pool-size"`
 			Timeout  uint64 `yaml:"timeout"`
 		} `yaml:"redis"`
-		Influxdb struct {
-			Enable bool   `yaml:"enable"`
-			Host   string `yaml:"host"`
-			Port   string `yaml:"port"`
-			Token  string `yaml:"token"`
-			Org    string `yaml:"org"`
-			Bucket string `yaml:"bucket"`
-		} `yaml:"influxdb"`
 	} `yaml:"database"`
 	Security struct {
 		Password struct {

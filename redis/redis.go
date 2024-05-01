@@ -2,6 +2,7 @@ package redis
 
 import (
 	"context"
+	"fmt"
 	"frp-admin/common"
 	"frp-admin/config"
 	"frp-admin/logger"
@@ -26,7 +27,7 @@ func Connect() {
 	logger.LogInfo("Connecting to redis server [%s:%s]...", host, port)
 	redisMutex.Lock()
 	Client = redis.NewClient(&redis.Options{
-		Addr:     host + ":" + port,
+		Addr:     fmt.Sprintf("%s:%v", host, port),
 		Password: password,
 		DB:       db,
 		PoolSize: poolSize,
