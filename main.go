@@ -21,6 +21,7 @@ var Args map[string]Cmd
 
 func main() {
 	config.GetConfig()
+	util.InitEmailTemplate()
 	util.GetKeys()
 	db.Connect()
 	redis.Connect()

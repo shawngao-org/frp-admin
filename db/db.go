@@ -25,7 +25,7 @@ func Connect() {
 	pwd := config.Conf.Database.Mysql.Password
 	db := config.Conf.Database.Mysql.Db
 	logger.LogInfo("Connecting to mysql server [%s:%s]...", host, port)
-	uri := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true", user, pwd, host, port, db)
+	uri := fmt.Sprintf("%s:%s@tcp(%s:%v)/%s?parseTime=true", user, pwd, host, port, db)
 	dsn, err := gorm.Open(mysql.Open(uri), &gorm.Config{})
 	if err != nil {
 		logger.LogErr("Can not connection to mysql server [%s:%s]", host, port)

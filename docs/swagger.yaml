@@ -71,4 +71,24 @@ paths:
       summary: Register
       tags:
       - User
+  /api/v1/test-mail:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Send Test Mail
+      tags:
+      - User
 swagger: "2.0"

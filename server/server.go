@@ -2,8 +2,10 @@ package server
 
 import (
 	"context"
+	"fmt"
 	"frp-admin/config"
 	"frp-admin/logger"
+	"frp-admin/redis"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
@@ -19,7 +21,7 @@ func HandleServer() {
 		logger.LogInfo("[%s] => [%s]", router.Method, router.Path)
 	}
 	srv := &http.Server{
-		Addr:    config.Conf.Server.Ip + ":" + config.Conf.Server.Port,
+		Addr:    fmt.Sprintf("%s:%v", config.Conf.Server.Ip, config.Conf.Server.Port),
 		Handler: r,
 	}
 	go func() {
@@ -43,9 +45,13 @@ func shutdownServer(srv *http.Server) {
 	signal.Notify(quit, os.Interrupt)
 	<-quit
 	logger.LogWarn("Shutting down server...")
+	err := redis.Client.Close()
+	if err != nil {
+		logger.LogErr("Error: %s", err)
+	}
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	err := srv.Shutdown(ctx)
+	err = srv.Shutdown(ctx)
 	if err != nil {
 		logger.LogErr("Error: %s", err)
 	}

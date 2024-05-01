@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"frp-admin/api"
 	"frp-admin/config"
 	"frp-admin/docs"
@@ -21,11 +22,12 @@ func RootRouter(r *gin.Engine) {
 		v1.GET("/ping", api.Ping)
 		v1.POST("/login", api.Login)
 		v1.POST("/register", api.Register)
+		v1.POST("/test-mail", api.SendTestMail)
 
 		docs.SwaggerInfo.Title = "API Docs"
 		docs.SwaggerInfo.Description = "null."
 		docs.SwaggerInfo.Version = "1.0"
-		docs.SwaggerInfo.Host = config.Conf.Server.Ip + ":" + config.Conf.Server.Port
+		docs.SwaggerInfo.Host = fmt.Sprintf("%s:%v", config.Conf.Server.Ip, config.Conf.Server.Port)
 		docs.SwaggerInfo.BasePath = "/"
 		docs.SwaggerInfo.Schemes = []string{"http", "https"}
 		v1.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

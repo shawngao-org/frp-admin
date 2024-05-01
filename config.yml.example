@@ -1,77 +1,100 @@
-# 服务器相关配置
+# Server config
 server:
-  # 服务器监听的IP地址
-  ip: 0.0.0.0
-  # 监听的端口号
+  # Server ip address
+  ip: 127.0.0.1
+  # Listen port
   port: 8089
-# 数据库相关配置
+# Mail sender config
+mail:
+  # SMTP server ip address or domain name
+  host: ''
+  # SMTP port
+  # 465: TLS
+  # 25: Normal
+  port: 465
+  # Sender mail address
+  mail: ''
+  from-mail: ''
+  nick-name: 'FRP Admin'
+  # Sender mail password
+  password: ''
+  template:
+    -
+      # !!!!! Note !!!!!
+      # Don't delete this template config and file.
+      name: example-template
+      path: ./template/example-template.html
+# Database config
 database:
   # MySQL
   mysql:
-    # MySQL 主机地址
+    # MySQL Host ip address or domain name
     host: 127.0.0.1
-    # MySQL 端口(默认3306)
+    # MySQL port(default: 3306)
     port: 3306
-    # 数据库名称
-    db: ''
-    # 用户
+    # Database name
+    db: frp_admin
+    # MySQL username
     user: ''
-    # 密码
+    # MySQL password
     password: ''
   # Redis
   redis:
-    # Redis 主机地址
+    # Redis host ip address or domain name
     host: 127.0.0.1
-    # Redis 端口号(默认6379)
+    # Redis port(default: 6379)
     port: 6379
-    # 数据库序号(默认0)
+    # Database index(default: 0)
     db: 0
-    # Redis 密码(默认为空)
+    # Redis password(default: '')
     password: ''
-# 安全相关配置
+    # Pool size(default: 100)
+    pool-size: 100
+    # Timeout(second)
+    timeout: 5
+# Security config
 security:
-  # 密码
+  # Password config
   password:
-    # 加密方式: hmac512(需要私钥), hmac256(需要私钥), sha224(不需要私钥), sha256(不需要私钥), sha384(不需要私钥), sha512(不需要私钥),
-    # bcrypt(不需要私钥, 需要提供哈希次数 -> cost)
+    # Encrypt method(*: Need provide private key): hmac512(*), hmac256(*), sha224, sha256, sha384, sha512,
+    # bcrypt(need cost, default: 14)
     method: bcrypt
-    secret: ''
-    const: 10
+    secret: 'rqF>mfHE.xZt3^)y-^pJUzU02aeHJ?LE'
+    const: 14
   # JWT
   jwt:
-    # 加密 JWT 的私钥
-    secret: ''
-    # JWT 的过期时间(秒)
+    # JWT private key
+    secret: 'qA}s.g,*hi+-PkGq>Cu.0-G38oPt69^t'
+    # JWT Expire time(second)
     timeout: 2592000
   # RSA
   rsa:
-    # 公钥路径
+    # Public key path
     public: ./public.pem
-    # 私钥路径
+    # Private key path
     private: ./private.pem
   totp:
-    issuer: ''
-# NacOS 统一配置中心
+    issuer: frp-admin
+# NacOS
 nacos:
-  # 是否启用统一配置
   enable: false
-  # NacOS 主机地址
-  ip: ''
-  # NacOS 端口号(默认8848)
+  # NacOS Host ip address or domain name
+  ip: 10.4.61.203
+  # NacOS port(default: 8848)
   port: 8848
-  # 用户名
+  # User name
   username: ''
-  # 密码
+  # Password
   password: ''
-  # 命名空间
-  namespace: ''
-  # 配置文件所属组
-  group: ''
-  # 配置文件的数据编号
-  dataId: ''
-  # 超时时长
+  # Namespace
+  namespace: 0ead3860-538a-4029-8246-20ff5b95f267
+  # Config group
+  group: dev
+  # Config data number
+  dataId: gin-config.yaml
+  # Timeout
   timeout: 5000
-  # 日志级别
+  # Log level, default: debug
   loglevel: debug
-# 开发者模式(开发者模式会绕过所有的权限认证)
+# Develop mode(Bypass all auth)
 develop: false
