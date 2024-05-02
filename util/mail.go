@@ -4,15 +4,34 @@ import (
 	"bytes"
 	"crypto/tls"
 	"fmt"
+	"frp-admin/common"
 	"frp-admin/config"
+	"frp-admin/db"
+	"frp-admin/entity"
 	"frp-admin/logger"
+	"frp-admin/redis"
+	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/utils"
+	"github.com/goccy/go-json"
+	"gorm.io/gorm"
 	template2 "html/template"
 	"net"
 	"net/smtp"
 	"os"
+	"time"
 )
 
+type MailContent struct {
+	Title   string
+	Content string
+	BtnLink string
+	BtnText string
+	Author  string
+	Note    string
+}
+
 var TemplateMap = make(map[string]string)
+
+var DefaultFooterNote = "You received this email because you signed up for our services.If you did not, please ignore this email."
 
 func InitEmailTemplate() {
 	templateList := config.Conf.Mail.Template
@@ -26,20 +45,15 @@ func InitEmailTemplate() {
 	}
 }
 
-func SendTestMail(toMail string) {
-	content := make(map[string]string)
-	content["Title"] = "Test mail"
-	content["Content"] = "This is a test mail."
-	content["BtnLink"] = "https://www.google.com"
-	content["BtnText"] = "Click to Google"
-	content["Author"] = "ShawnGao"
-	content["Note"] = "You received this email because you signed up for our services.If you did not, please ignore this email."
-	body, err := FillTemplate("example-template", content)
+func SendDefaultMail(toMail string, subject string, content *MailContent) {
+	var contentMap = make(map[string]string)
+	Struct2Map(content, &contentMap)
+	body, err := FillTemplate("example-template", contentMap)
 	if err != nil {
 		logger.LogErr("Send failed. %s", err)
 		return
 	}
-	SendMail(toMail, "Test mail", body)
+	SendMail(toMail, subject, body)
 }
 
 func FillTemplate(templateName string, data map[string]string) (string, error) {
@@ -158,4 +172,26 @@ func SendMailUsingTLS(addr string, auth smtp.Auth, from string, to []string, msg
 	}
 	// 设置标志表明连接已关闭
 	isClosed = true
+}
+
+func Struct2Map(obj any, resultMap *map[string]string) {
+	b, _ := json.Marshal(&obj)
+	_ = json.Unmarshal(b, resultMap)
+}
+
+func GenerateTmpCode2Redis() (string, error) {
+	tmpCode := entity.TmpCode{
+		Model:  gorm.Model{},
+		Id:     utils.NewUUID().String(),
+		IsUsed: false,
+	}
+	result := db.Db.Create(&tmpCode)
+	if result.Error != nil {
+		return "", result.Error
+	}
+	status := redis.Client.Set(common.Context, tmpCode.Id, tmpCode.IsUsed, 5*time.Second)
+	if status.Err() != nil {
+		return "", status.Err()
+	}
+	return tmpCode.Id, nil
 }

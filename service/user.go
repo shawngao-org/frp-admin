@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"frp-admin/common"
 	"frp-admin/config"
 	"frp-admin/db"
@@ -26,10 +27,31 @@ func GetUserByEmail(email string) (entity.User, error) {
 	return user, nil
 }
 
+func CheckEmail(email string) (entity.User, error) {
+	validMsg := util.ValidateEmail(email)
+	if !util.IsPassValid(validMsg) {
+		return entity.User{}, errors.New(validMsg)
+	}
+	user, err := GetUserByEmail(email)
+	if err != nil {
+		return entity.User{}, errors.New(err.Error())
+	}
+	return user, nil
+}
+
 func CheckUserExists(name string, email string) bool {
 	var user entity.User
 	db.Db.First(&user, "name = ? OR email = ?", name, email)
 	return !reflect.DeepEqual(user, entity.User{})
+}
+
+func GetUserById(id string) (entity.User, error) {
+	var user entity.User
+	db.Db.First(&user, "id = ?", id)
+	if reflect.DeepEqual(user, entity.User{}) {
+		return entity.User{}, errors.New("user not found")
+	}
+	return user, nil
 }
 
 func GetUserByEmailAndPasswd(email string, password string) (entity.User, error) {
@@ -148,21 +170,30 @@ func Login(ctx *gin.Context) {
 	})
 }
 
-func SendTestMail(ctx *gin.Context) {
+func SendForgetPasswordMail(ctx *gin.Context) {
 	email := ctx.PostForm("email")
-	validMsg := util.ValidateEmail(email)
-	if !util.IsPassValid(validMsg) {
-		ctx.JSON(http.StatusBadRequest, gin.H{
-			"message": validMsg,
-		})
-		return
-	}
-	user, err := GetUserByEmail(email)
+	user, err := CheckEmail(email)
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{
 			"message": err,
 		})
 		return
 	}
-	util.SendTestMail(user.Email)
+	code, err := util.GenerateTmpCode2Redis()
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"message": err,
+		})
+		return
+	}
+	content := util.MailContent{
+		Title: "Reset Password",
+		Content: "Click the button below to reset your account password. " +
+			"Note: If you did not initiate the request, please ignore this email so as not to cause unnecessary trouble.",
+		BtnLink: fmt.Sprintf("%s/reset-password/%s", config.Conf.Server.FrontEndAddr, code),
+		BtnText: "Click to change your password",
+		Author:  "FRP-Admin",
+		Note:    util.DefaultFooterNote,
+	}
+	util.SendDefaultMail(user.Email, "Reset Password", &content)
 }
