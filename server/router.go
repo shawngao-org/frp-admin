@@ -19,10 +19,13 @@ func LoadRouter(r *gin.Engine) {
 func RootRouter(r *gin.Engine) {
 	v1 := r.Group(apiPrefix)
 	{
-		v1.GET("/ping", api.Ping)
-		v1.POST("/login", api.Login)
-		v1.POST("/register", api.Register)
-		v1.POST("/test-mail", api.SendTestMail)
+		user := v1.Group("/user")
+		{
+			user.GET("/ping", api.Ping)
+			user.POST("/login", api.Login)
+			user.POST("/register", api.Register)
+			user.POST("/forget-password", api.SendForgetPasswordMail)
+		}
 
 		docs.SwaggerInfo.Title = "API Docs"
 		docs.SwaggerInfo.Description = "null."

@@ -1,7 +1,44 @@
 info:
   contact: {}
 paths:
-  /api/v1/login:
+  /api/v1/ping:
+    get:
+      consumes:
+      - application/json
+      description: Ping-Pong
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Ping pong
+      tags:
+      - Ping
+  /api/v1/user/forget-password:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Send forget password mail, but front-end must have "http://xxx.xxx.xxx/reset-password/:code"
+        router.
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Send Forget Password Mail
+      tags:
+      - User
+  /api/v1/user/login:
     post:
       consumes:
       - multipart/form-data
@@ -26,22 +63,7 @@ paths:
       summary: Login
       tags:
       - User
-  /api/v1/ping:
-    get:
-      consumes:
-      - application/json
-      description: Ping-Pong
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: Ping pong
-      tags:
-      - Ping
-  /api/v1/register:
+  /api/v1/user/register:
     post:
       consumes:
       - multipart/form-data
@@ -69,26 +91,6 @@ paths:
           schema:
             type: string
       summary: Register
-      tags:
-      - User
-  /api/v1/test-mail:
-    post:
-      consumes:
-      - multipart/form-data
-      parameters:
-      - description: Email
-        in: formData
-        name: email
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
-      summary: Send Test Mail
       tags:
       - User
 swagger: "2.0"

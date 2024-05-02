@@ -13,7 +13,7 @@ import (
 // @Success      200  {object}  string
 // @Param        email formData string true "Email"
 // @Param        password formData string true "Password(RSA Encrypted)"
-// @Router       /api/v1/login [post]
+// @Router       /api/v1/user/login [post]
 func Login(ctx *gin.Context) {
 	service.Login(ctx)
 }
@@ -27,7 +27,7 @@ func Login(ctx *gin.Context) {
 // @Param        name formData string true "Name"
 // @Param        email formData string true "Email"
 // @Param        password formData string true "Password(RSA Encrypted)"
-// @Router       /api/v1/register [post]
+// @Router       /api/v1/user/register [post]
 func Register(ctx *gin.Context) {
 	service.RegisterUser(ctx)
 }
