@@ -2,9 +2,15 @@
 
 [![CodeQL](https://github.com/shawngao-org/frp-admin/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/shawngao-org/frp-admin/actions/workflows/github-code-scanning/codeql)
 
+[中文文档](./README-zh.md)
+
 Welcome to the FRP Management Panel API documentation. 
 This API allows you to manage your FRP (Fast Reverse Proxy) instances programmatically. 
 You can configure proxies, manage connections, and retrieve logs using simple HTTP requests.
+
+## Warning
+
+- Note: Do not use for illegal purposes. Including but not limited to the illegal provision of international Internet channels, the provision of illegal services for the transfer or acceleration of services.
 
 ## Features
 
@@ -31,7 +37,23 @@ You can configure proxies, manage connections, and retrieve logs using simple HT
 
 If you would like to contribute to the API, outline the steps you would like contributors to take.
 
-Tips: 可以使用中文进行沟通
+## Disclaimer
+
+### Overview
+
+frp-admin is an open source project and the authors provide no express or implied warranties of any kind. Users use at their own risk.
+
+### Risk taking
+
+The User understands the risks associated with the use of the Software and agrees to bear any consequences, including but not limited to system damage or data loss.
+
+### Legal responsibility
+
+In no event shall the authors or contributors of the Project be liable for direct or indirect problems arising from the use of the Software.
+
+### Compliance
+
+It is the user's responsibility to ensure the legality of use of the Software and to comply with applicable local laws and regulations.
 
 ## License
 
