@@ -25,6 +25,7 @@ func RootRouter(r *gin.Engine) {
 			user.POST("/login", api.Login)
 			user.POST("/register", api.Register)
 			user.POST("/forget-password", api.SendForgetPasswordMail)
+			user.POST("/reset-password", api.ResetPassword)
 		}
 
 		docs.SwaggerInfo.Title = "API Docs"
