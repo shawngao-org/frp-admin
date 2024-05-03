@@ -93,4 +93,34 @@ paths:
       summary: Register
       tags:
       - User
+  /api/v1/user/reset-password:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: New Password (RSA Encrypted)
+        in: formData
+        name: password
+        required: true
+        type: string
+      - description: Verify code (Temp code)
+        in: formData
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Verify tmp code and reset password
+      tags:
+      - User
 swagger: "2.0"
