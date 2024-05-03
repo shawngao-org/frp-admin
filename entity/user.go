@@ -17,10 +17,6 @@ type User struct {
 	Ip           string    `gorm:"<-:create;type:varchar(39);not null;uniqueIndex:ip_idx"`
 	Key          string    `gorm:"type:varchar(36);uniqueIndex:key_idx;not null"`
 	GroupId      string    `gorm:"type:varchar(36);not null"`
-	CreatedAt    time.Time `gorm:"<-:create;not null"`
-	UpdatedAt    time.Time `gorm:"not null"`
-	Created      int64     `gorm:"<-:create;autoCreateTime;not null"`
-	Updated      int64     `gorm:"autoUpdateTime:milli;not null"`
 	// Foreign key
 	Invite           []Invite         `gorm:"foreignKey:UserId;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`
 	Invitees         Invite           `gorm:"foreignKey:Invitees;constraint:OnUpdate:CASCADE,OnDelete:NO ACTION"`

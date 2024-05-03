@@ -4,6 +4,9 @@ server:
   ip: 127.0.0.1
   # Listen port
   port: 8089
+  # Public network access address
+  # If this option is not filled in, the URL in the send email may not be accessible.
+  front-end-addr: http://127.0.0.1:8089
 # Mail sender config
 mail:
   # SMTP server ip address or domain name

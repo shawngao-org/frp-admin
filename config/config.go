@@ -29,8 +29,9 @@ type Template struct {
 
 type Config struct {
 	Server struct {
-		Ip   string `yaml:"ip"`
-		Port uint64 `yaml:"port"`
+		Ip           string `yaml:"ip"`
+		Port         uint64 `yaml:"port"`
+		FrontEndAddr string `yaml:"front-end-addr"`
 	} `yaml:"server"`
 	Mail struct {
 		Host     string     `yaml:"host"`

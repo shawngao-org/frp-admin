@@ -51,6 +51,7 @@ func GetTableList() map[string]any {
 	tables["proxies"] = &entity.Proxy{}
 	tables["routers"] = &entity.Router{}
 	tables["router_permissions"] = &entity.RouterPermission{}
+	tables["tmp_codes"] = &entity.TmpCode{}
 	return tables
 }
 

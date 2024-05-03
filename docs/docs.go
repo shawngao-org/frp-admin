@@ -15,7 +15,62 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/login": {
+        "/api/v1/ping": {
+            "get": {
+                "description": "Ping-Pong",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Ping"
+                ],
+                "summary": "Ping pong",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/forget-password": {
+            "post": {
+                "description": "Send forget password mail, but front-end must have \"http://xxx.xxx.xxx/reset-password/:code\" router.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Send Forget Password Mail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/login": {
             "post": {
                 "consumes": [
                     "multipart/form-data"
@@ -53,30 +108,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/ping": {
-            "get": {
-                "description": "Ping-Pong",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "Ping"
-                ],
-                "summary": "Ping pong",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/api/v1/register": {
+        "/api/v1/user/register": {
             "post": {
                 "consumes": [
                     "multipart/form-data"
@@ -121,7 +153,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/v1/test-mail": {
+        "/api/v1/user/reset-password": {
             "post": {
                 "consumes": [
                     "multipart/form-data"
@@ -132,12 +164,26 @@ const docTemplate = `{
                 "tags": [
                     "User"
                 ],
-                "summary": "Send Test Mail",
+                "summary": "Verify tmp code and reset password",
                 "parameters": [
                     {
                         "type": "string",
                         "description": "Email",
                         "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "New Password (RSA Encrypted)",
+                        "name": "password",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Verify code (Temp code)",
+                        "name": "code",
                         "in": "formData",
                         "required": true
                     }
