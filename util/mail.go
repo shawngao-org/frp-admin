@@ -4,20 +4,13 @@ import (
 	"bytes"
 	"crypto/tls"
 	"fmt"
-	"frp-admin/common"
 	"frp-admin/config"
-	"frp-admin/db"
-	"frp-admin/entity"
 	"frp-admin/logger"
-	"frp-admin/redis"
-	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/utils"
 	"github.com/goccy/go-json"
-	"gorm.io/gorm"
 	template2 "html/template"
 	"net"
 	"net/smtp"
 	"os"
-	"time"
 )
 
 type MailContent struct {
@@ -177,21 +170,4 @@ func SendMailUsingTLS(addr string, auth smtp.Auth, from string, to []string, msg
 func Struct2Map(obj any, resultMap *map[string]string) {
 	b, _ := json.Marshal(&obj)
 	_ = json.Unmarshal(b, resultMap)
-}
-
-func GenerateTmpCode2Redis() (string, error) {
-	tmpCode := entity.TmpCode{
-		Model:  gorm.Model{},
-		Id:     utils.NewUUID().String(),
-		IsUsed: false,
-	}
-	result := db.Db.Create(&tmpCode)
-	if result.Error != nil {
-		return "", result.Error
-	}
-	status := redis.Client.Set(common.Context, tmpCode.Id, tmpCode.IsUsed, 5*time.Second)
-	if status.Err() != nil {
-		return "", status.Err()
-	}
-	return tmpCode.Id, nil
 }

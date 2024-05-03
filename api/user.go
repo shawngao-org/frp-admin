@@ -44,3 +44,17 @@ func Register(ctx *gin.Context) {
 func SendForgetPasswordMail(ctx *gin.Context) {
 	service.SendForgetPasswordMail(ctx)
 }
+
+// ResetPassword godoc
+// @Summary      Verify tmp code and reset password
+// @Tags         User
+// @Accept       multipart/form-data
+// @Produce      application/json
+// @Success      200  {object}  string
+// @Param        email formData string true "Email"
+// @Param        password formData string true "New Password (RSA Encrypted)"
+// @Param        code formData string true "Verify code (Temp code)"
+// @Router       /api/v1/user/reset-password [post]
+func ResetPassword(ctx *gin.Context) {
+	service.ResetPassword(ctx)
+}
