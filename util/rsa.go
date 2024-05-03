@@ -29,12 +29,12 @@ func GetKeys() {
 	PublicKey = string(pub)
 }
 
-func Decrypted(str string) string {
+func Decrypted(str string) (string, error) {
 	originStr, err := base64.StdEncoding.DecodeString(str)
 	if err != nil {
 		logger.LogErr("Unable to decode public key.")
 		logger.LogErr("%s", err)
-		return ""
+		return "", err
 	}
 	cipherText := originStr
 	privateKeyBlock, _ := pem.Decode([]byte(PrivateKey))
@@ -42,39 +42,39 @@ func Decrypted(str string) string {
 	if err != nil {
 		logger.LogErr("Unable to parse private key.")
 		logger.LogErr("%s", err)
-		return ""
+		return "", err
 	}
 	rsaPrivateKey, ok := privateKey.(*rsa.PrivateKey)
 	if !ok {
 		logger.LogErr("Wrong private key type.")
-		return ""
+		return "", err
 	}
 	decryptedText, err := rsa.DecryptPKCS1v15(rand.Reader, rsaPrivateKey, cipherText)
 	if err != nil {
 		logger.LogErr("%s", err)
-		return ""
+		return "", err
 	}
-	return string(decryptedText)
+	return string(decryptedText), nil
 }
 
-func Encrypted(str string) string {
+func Encrypted(str string) (string, error) {
 	plainText := []byte(str)
 	publicKeyBlock, _ := pem.Decode([]byte(PublicKey))
 	publicKey, err := x509.ParsePKIXPublicKey(publicKeyBlock.Bytes)
 	if err != nil {
 		logger.LogErr("Unable to parse public key.")
 		logger.LogErr("%s", err)
-		return ""
+		return "", err
 	}
 	rsaPublicKey, ok := publicKey.(*rsa.PublicKey)
 	if !ok {
 		logger.LogErr("Wrong public key type.")
-		return ""
+		return "", err
 	}
 	encryptedText, err := rsa.EncryptPKCS1v15(rand.Reader, rsaPublicKey, plainText)
 	if err != nil {
 		logger.LogErr("%s", err)
-		return ""
+		return "", err
 	}
-	return base64.StdEncoding.EncodeToString(encryptedText)
+	return base64.StdEncoding.EncodeToString(encryptedText), nil
 }
