@@ -45,15 +45,6 @@ func CheckUserExists(name string, email string) bool {
 	return !reflect.DeepEqual(user, entity.User{})
 }
 
-func GetUserById(id string) (entity.User, error) {
-	var user entity.User
-	db.Db.First(&user, "id = ?", id)
-	if reflect.DeepEqual(user, entity.User{}) {
-		return entity.User{}, errors.New("user not found")
-	}
-	return user, nil
-}
-
 func GetUserByEmailAndPasswd(email string, password string) (entity.User, error) {
 	user, err := GetUserByEmail(email)
 	if err != nil {
@@ -80,7 +71,8 @@ func GetUserByEmailAndPasswd(email string, password string) (entity.User, error)
 }
 
 func UpdateUserById(user entity.User) error {
-	result, err := GetUserById(user.Id)
+	var result entity.User
+	err := GetById(result, user.Id)
 	if err != nil {
 		return err
 	}
