@@ -14,7 +14,7 @@ type User struct {
 	TotpKey      string    `gorm:"type:varchar(64)"`
 	IsValid      bool      `gorm:"default:false;not null"`
 	RegisterTime time.Time `gorm:"<-:create;not null"`
-	Ip           string    `gorm:"<-:create;type:varchar(39);not null;uniqueIndex:ip_idx"`
+	Ip           string    `gorm:"<-:create;type:varchar(39);not null"`
 	Key          string    `gorm:"type:varchar(36);uniqueIndex:key_idx;not null"`
 	GroupId      string    `gorm:"type:varchar(36);not null"`
 	// Foreign key
