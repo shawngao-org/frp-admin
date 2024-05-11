@@ -16,6 +16,31 @@ paths:
       summary: Ping pong
       tags:
       - Ping
+  /api/v1/user/confirm-register:
+    post:
+      consumes:
+      - multipart/form-data
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Verify code (Temp code)
+        in: formData
+        name: code
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Confirm register
+      tags:
+      - User
   /api/v1/user/forget-password:
     post:
       consumes:
@@ -121,6 +146,28 @@ paths:
           schema:
             type: string
       summary: Verify tmp code and reset password
+      tags:
+      - User
+  /api/v1/user/verify-register:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Send verify mail, but front-end must have "http://xxx.xxx.xxx/verify-register/:code"
+        router.
+      parameters:
+      - description: Email
+        in: formData
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Send verify Mail
       tags:
       - User
 swagger: "2.0"

@@ -24,6 +24,8 @@ func RootRouter(r *gin.Engine) {
 			user.GET("/ping", api.Ping)
 			user.POST("/login", api.Login)
 			user.POST("/register", api.Register)
+			user.POST("/verify-register", api.SendRegisterVerifyMail)
+			user.POST("/confirm-register", api.ConfirmVerifyRegister)
 			user.POST("/forget-password", api.SendForgetPasswordMail)
 			user.POST("/reset-password", api.ResetPassword)
 		}

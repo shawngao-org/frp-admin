@@ -45,6 +45,32 @@ func SendForgetPasswordMail(ctx *gin.Context) {
 	service.SendForgetPasswordMail(ctx)
 }
 
+// SendRegisterVerifyMail godoc
+// @Summary      Send verify Mail
+// @description  Send verify mail, but front-end must have "http://xxx.xxx.xxx/verify-register/:code" router.
+// @Tags         User
+// @Accept       multipart/form-data
+// @Produce      application/json
+// @Success      200  {object}  string
+// @Param        email formData string true "Email"
+// @Router       /api/v1/user/verify-register [post]
+func SendRegisterVerifyMail(ctx *gin.Context) {
+	service.SendRegisterVerifyMail(ctx)
+}
+
+// ConfirmVerifyRegister godoc
+// @Summary      Confirm register
+// @Tags         User
+// @Accept       multipart/form-data
+// @Produce      application/json
+// @Success      200  {object}  string
+// @Param        email formData string true "Email"
+// @Param        code formData string true "Verify code (Temp code)"
+// @Router       /api/v1/user/confirm-register [post]
+func ConfirmVerifyRegister(ctx *gin.Context) {
+	service.ConfirmVerifyRegister(ctx)
+}
+
 // ResetPassword godoc
 // @Summary      Verify tmp code and reset password
 // @Tags         User
