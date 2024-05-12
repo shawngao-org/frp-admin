@@ -38,7 +38,7 @@ func Connect() {
 	Db = Db.Debug()
 	connectMutex.Unlock()
 	Tables = GetTableList()
-	CheckTables()
+	CheckAndCreateTables()
 }
 
 func GetTableList() map[string]any {
@@ -55,7 +55,7 @@ func GetTableList() map[string]any {
 	return tables
 }
 
-func CheckTables() {
+func CheckAndCreateTables() {
 	for k, v := range Tables {
 		if !Db.Migrator().HasTable(k) {
 			logger.LogWarn("Table [%s] does not exists. Creating...", k)
@@ -65,6 +65,18 @@ func CheckTables() {
 				os.Exit(-1)
 			}
 			logger.LogSuccess("Table [%s] has been created.", k)
+			if k == "groups" {
+				defaultGroup := entity.Group{
+					Model:         gorm.Model{},
+					Id:            config.Conf.Data.GroupId,
+					Name:          "default",
+					NickName:      "Default",
+					Traffic:       0,
+					ProxyQuantity: 0,
+					BoundWidth:    0,
+				}
+				Db.Create(&defaultGroup)
+			}
 		}
 	}
 }
@@ -81,5 +93,5 @@ func ReinitializeDatabase() {
 			logger.LogSuccess("Table [%s] has been deleted.", k)
 		}
 	}
-	CheckTables()
+	CheckAndCreateTables()
 }

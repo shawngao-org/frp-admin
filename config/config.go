@@ -77,6 +77,9 @@ type Config struct {
 			Issuer string `yaml:"issuer"`
 		} `yaml:"totp"`
 	} `yaml:"security"`
+	Data struct {
+		GroupId string `yaml:"group-id"`
+	} `yaml:"data"`
 	Nacos struct {
 		Enable    bool   `yaml:"enable"`
 		Ip        string `yaml:"ip"`

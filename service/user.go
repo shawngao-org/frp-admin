@@ -70,17 +70,6 @@ func GetUserByEmailAndPasswd(email string, password string) (entity.User, error)
 	return entity.User{}, errors.New("invalid password")
 }
 
-func UpdateUserById(user entity.User) error {
-	var result entity.User
-	err := GetById(result, user.Id)
-	if err != nil {
-		return err
-	}
-	util.CopyProperties(&user, &result)
-	db.Db.Save(result)
-	return nil
-}
-
 func RegisterUser(ctx *gin.Context) {
 	name := ctx.PostForm("name")
 	email := ctx.PostForm("email")
@@ -114,7 +103,7 @@ func RegisterUser(ctx *gin.Context) {
 		RegisterTime: time.Now(),
 		Ip:           ctx.RemoteIP(),
 		Key:          utils.NewUUID().String(),
-		GroupId:      "47bbe440-dfcb-435f-b7ef-dba7b54a2135",
+		GroupId:      config.Conf.Data.GroupId,
 	}
 	result := db.Db.Create(&user)
 	if result.Error != nil {
@@ -155,28 +144,80 @@ func Login(ctx *gin.Context) {
 	OkHandleByPayload(ctx, gin.H{"token": token})
 }
 
+func SendRegisterVerifyMail(ctx *gin.Context) {
+	SendVerificationMail(ctx, "register")
+}
+
 func SendForgetPasswordMail(ctx *gin.Context) {
+	SendVerificationMail(ctx, "resetPassword")
+}
+
+func SendVerificationMail(ctx *gin.Context, mailType string) {
 	email := ctx.PostForm("email")
 	user, err := CheckEmail(email)
 	if err != nil {
 		ErrHandle(ctx, err, http.StatusBadRequest)
 		return
 	}
-	code, err := GenerateResetPasswordTmpCode2Redis(user.Id)
+	if user.IsValid {
+		ErrHandle(ctx, "Do not duplicate verification.", http.StatusBadRequest)
+		return
+	}
+	var redisKey, title, btnLinkPath, btnText string
+	switch mailType {
+	case "register":
+		redisKey = getRegisterVerifyRedisKey(user.Id)
+		title = "Register Verify"
+		btnLinkPath = "/verify-register/"
+		btnText = "Click to verify"
+	case "resetPassword":
+		redisKey = getResetPasswordRedisKey(user.Id)
+		title = "Reset Password"
+		btnLinkPath = "/reset-password/"
+		btnText = "Click to change your password"
+	default:
+		ErrHandle(ctx, fmt.Errorf("unknown mail type"), http.StatusBadRequest)
+		return
+	}
+	code, err := GenerateTmpCode2Redis(redisKey)
 	if err != nil {
 		ErrHandle(ctx, err, http.StatusInternalServerError)
 		return
 	}
 	content := util.MailContent{
-		Title: "Reset Password",
-		Content: "Click the button below to reset your account password. " +
+		Title: title,
+		Content: fmt.Sprintf("Click the button below to %s your account. "+
 			"Note: If you did not initiate the request, please ignore this email so as not to cause unnecessary trouble.",
-		BtnLink: fmt.Sprintf("%s/reset-password/%s", config.Conf.Server.FrontEndAddr, code),
-		BtnText: "Click to change your password",
+			strings.ToLower(title)),
+		BtnLink: fmt.Sprintf("%s%s%s", config.Conf.Server.FrontEndAddr, btnLinkPath, code),
+		BtnText: btnText,
 		Author:  "FRP-Admin",
 		Note:    util.DefaultFooterNote,
 	}
-	util.SendDefaultMail(user.Email, "Reset Password", &content)
+	util.SendDefaultMail(user.Email, content.Title, &content)
+	OkHandle(ctx)
+}
+
+func ConfirmVerifyRegister(ctx *gin.Context) {
+	email := ctx.PostForm("email")
+	code := ctx.PostForm("code")
+	user, err := CheckEmail(email)
+	if err != nil {
+		ErrHandle(ctx, err, http.StatusBadRequest)
+		return
+	}
+	redisKey := getRegisterVerifyRedisKey(user.Id)
+	_, err = VerifyTmpCodeRedis(code, redisKey)
+	if err != nil {
+		ErrHandle(ctx, err, http.StatusBadRequest)
+		return
+	}
+	user.IsValid = true
+	err = UpdateById(&user)
+	if err != nil {
+		ErrHandle(ctx, err, http.StatusInternalServerError)
+		return
+	}
 	OkHandle(ctx)
 }
 
@@ -189,9 +230,10 @@ func ResetPassword(ctx *gin.Context) {
 		ErrHandle(ctx, err, http.StatusBadRequest)
 		return
 	}
-	_, err = VerifyResetPasswordTmpCodeRedis(user.Id, verifyCode)
+	redisKey := getResetPasswordRedisKey(user.Id)
+	_, err = VerifyTmpCodeRedis(redisKey, verifyCode)
 	if err != nil {
-		ErrHandle(ctx, 123, http.StatusBadRequest)
+		ErrHandle(ctx, err, http.StatusBadRequest)
 		return
 	}
 	decryptedPassword, err := util.Decrypted(encryptedPassword)
@@ -209,7 +251,7 @@ func ResetPassword(ctx *gin.Context) {
 		return
 	}
 	user.Password = passwordResult
-	err = UpdateUserById(user)
+	err = UpdateById(&user)
 	if err != nil {
 		ErrHandle(ctx, err, http.StatusInternalServerError)
 		return
@@ -217,7 +259,7 @@ func ResetPassword(ctx *gin.Context) {
 	OkHandle(ctx)
 }
 
-func GenerateResetPasswordTmpCode2Redis(userId string) (string, error) {
+func GenerateTmpCode2Redis(redisKey string) (string, error) {
 	tmpCode := entity.TmpCode{
 		Model:  gorm.Model{},
 		Id:     utils.NewUUID().String(),
@@ -227,7 +269,6 @@ func GenerateResetPasswordTmpCode2Redis(userId string) (string, error) {
 	if result.Error != nil {
 		return "", result.Error
 	}
-	redisKey := getResetPasswordRedisKey(userId)
 	if _, err := redis.Client.Get(common.Context, redisKey).Result(); err == nil {
 		return "", errors.New("sending too often, please try again later")
 	}
@@ -238,8 +279,7 @@ func GenerateResetPasswordTmpCode2Redis(userId string) (string, error) {
 	return tmpCode.Id, nil
 }
 
-func VerifyResetPasswordTmpCodeRedis(userId string, code string) (bool, error) {
-	redisKey := getResetPasswordRedisKey(userId)
+func VerifyTmpCodeRedis(code string, redisKey string) (bool, error) {
 	val, err := redis.Client.Get(common.Context, redisKey).Result()
 	if err != nil {
 		return false, err
@@ -247,7 +287,8 @@ func VerifyResetPasswordTmpCodeRedis(userId string, code string) (bool, error) {
 	if val != code {
 		return false, errors.New("the verification code is not correct")
 	}
-	result, err := GetTmpCodeById(val)
+	var result entity.TmpCode
+	err = GetById(&result, val)
 	if err != nil {
 		return false, err
 	}
@@ -255,7 +296,7 @@ func VerifyResetPasswordTmpCodeRedis(userId string, code string) (bool, error) {
 		return false, errors.New("the verification code is invalid")
 	}
 	result.IsUsed = true
-	err = UpdateTmpCodeById(result)
+	err = UpdateById(&result)
 	if err != nil {
 		return false, err
 	}
@@ -265,4 +306,8 @@ func VerifyResetPasswordTmpCodeRedis(userId string, code string) (bool, error) {
 
 func getResetPasswordRedisKey(userId string) string {
 	return fmt.Sprintf("rp-%s", userId)
+}
+
+func getRegisterVerifyRedisKey(userId string) string {
+	return fmt.Sprintf("reg-%s", userId)
 }

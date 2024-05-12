@@ -38,6 +38,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/user/confirm-register": {
+            "post": {
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Confirm register",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Verify code (Temp code)",
+                        "name": "code",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/user/forget-password": {
             "post": {
                 "description": "Send forget password mail, but front-end must have \"http://xxx.xxx.xxx/reset-password/:code\" router.",
@@ -184,6 +222,38 @@ const docTemplate = `{
                         "type": "string",
                         "description": "Verify code (Temp code)",
                         "name": "code",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/user/verify-register": {
+            "post": {
+                "description": "Send verify mail, but front-end must have \"http://xxx.xxx.xxx/verify-register/:code\" router.",
+                "consumes": [
+                    "multipart/form-data"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "Send verify Mail",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Email",
+                        "name": "email",
                         "in": "formData",
                         "required": true
                     }
