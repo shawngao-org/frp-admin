@@ -103,7 +103,7 @@ func RegisterUser(ctx *gin.Context) {
 		RegisterTime: time.Now(),
 		Ip:           ctx.RemoteIP(),
 		Key:          utils.NewUUID().String(),
-		GroupId:      "47bbe440-dfcb-435f-b7ef-dba7b54a2135",
+		GroupId:      config.Conf.Data.GroupId,
 	}
 	result := db.Db.Create(&user)
 	if result.Error != nil {
