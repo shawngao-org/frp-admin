@@ -20,13 +20,23 @@ func RequestMiddleware() gin.HandlerFunc {
 
 func CORSMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		origin := c.Request.Header.Get("Origin")
+		allowOriginList := config.Conf.Server.AccessControlAllowOriginList
+		if len(allowOriginList) == 1 && allowOriginList[0] == "*" {
+			c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
+		} else {
+			for _, allowOrigin := range allowOriginList {
+				if origin == allowOrigin {
+					c.Writer.Header().Set("Access-Control-Allow-Origin", allowOrigin)
+					break
+				}
+			}
+		}
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
 		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
-
 		if c.Request.Method == "OPTIONS" {
-			c.AbortWithStatus(204)
+			c.AbortWithStatus(http.StatusNoContent)
 			return
 		}
 		c.Next()

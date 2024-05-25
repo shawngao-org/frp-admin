@@ -7,6 +7,10 @@ server:
   # Public network access address
   # If this option is not filled in, the URL in the send email may not be accessible.
   front-end-addr: http://127.0.0.1:8089
+  access-control-allow-origin:
+#    - 'http://127.0.0.1:8081'
+#    - 'http://127.0.0.1:8080'
+    - '*'
 # Mail sender config
 mail:
   # SMTP server ip address or domain name
