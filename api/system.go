@@ -8,11 +8,11 @@ import (
 // Ping godoc
 // @Summary      Ping pong
 // @Description  Ping-Pong
-// @Tags         Ping
+// @Tags         System
 // @Accept       json
 // @Produce      json
 // @Success      200  {object}  string
-// @Router       /api/v1/ping [get]
+// @Router       /api/v1/sys/ping [post]
 func Ping(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{
 		"message": "pong!",
