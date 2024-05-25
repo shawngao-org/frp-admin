@@ -1,8 +1,8 @@
 info:
   contact: {}
 paths:
-  /api/v1/ping:
-    get:
+  /api/v1/sys/ping:
+    post:
       consumes:
       - application/json
       description: Ping-Pong
@@ -15,7 +15,7 @@ paths:
             type: string
       summary: Ping pong
       tags:
-      - Ping
+      - System
   /api/v1/user/confirm-register:
     post:
       consumes:

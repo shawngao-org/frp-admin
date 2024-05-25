@@ -15,8 +15,8 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/ping": {
-            "get": {
+        "/api/v1/sys/ping": {
+            "post": {
                 "description": "Ping-Pong",
                 "consumes": [
                     "application/json"
@@ -25,7 +25,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Ping"
+                    "System"
                 ],
                 "summary": "Ping pong",
                 "responses": {

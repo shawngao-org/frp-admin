@@ -21,7 +21,6 @@ func RootRouter(r *gin.Engine) {
 	{
 		user := v1.Group("/user")
 		{
-			user.GET("/ping", api.Ping)
 			user.POST("/login", api.Login)
 			user.POST("/register", api.Register)
 			user.POST("/verify-register", api.SendRegisterVerifyMail)
@@ -29,7 +28,10 @@ func RootRouter(r *gin.Engine) {
 			user.POST("/forget-password", api.SendForgetPasswordMail)
 			user.POST("/reset-password", api.ResetPassword)
 		}
-
+		sys := v1.Group("/sys")
+		{
+			sys.POST("/ping", api.Ping)
+		}
 		docs.SwaggerInfo.Title = "API Docs"
 		docs.SwaggerInfo.Description = "null."
 		docs.SwaggerInfo.Version = "1.0"
