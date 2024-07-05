@@ -79,7 +79,8 @@ type Config struct {
 		} `yaml:"totp"`
 	} `yaml:"security"`
 	Data struct {
-		GroupId string `yaml:"group-id"`
+		GroupId          string `yaml:"group-id"`
+		InitUserPassword string `yaml:"init-user-password"`
 	} `yaml:"data"`
 	Nacos struct {
 		Enable    bool   `yaml:"enable"`

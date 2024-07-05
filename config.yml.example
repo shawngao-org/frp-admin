@@ -63,6 +63,7 @@ data:
   # Default group id, must be UUID format
   # Note: After setting, it is not necessary to change.
   group-id: '696a6d8a-f788-2c6a-ba33-128eff97fb64'
+  init-user-password: 'f!3UWreqabAdiGu1*e@l@639'
 # Security config
 security:
   # Password config

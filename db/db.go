@@ -5,10 +5,12 @@ import (
 	"frp-admin/config"
 	"frp-admin/entity"
 	"frp-admin/logger"
+	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"os"
 	"sync"
+	"time"
 )
 
 var (
@@ -76,6 +78,22 @@ func CheckAndCreateTables() {
 					BoundWidth:    0,
 				}
 				Db.Create(&defaultGroup)
+			}
+			if k == "users" {
+				defaultUser := entity.User{
+					Model:        gorm.Model{},
+					Id:           utils.NewUUID().String(),
+					Name:         "admin",
+					Email:        "admin@example.com",
+					Password:     config.Conf.Data.GroupId,
+					TotpKey:      "",
+					IsValid:      true,
+					RegisterTime: time.Time{},
+					Ip:           "127.0.0.1",
+					Key:          "",
+					GroupId:      config.Conf.Data.GroupId,
+				}
+				Db.Create(&defaultUser)
 			}
 		}
 	}
