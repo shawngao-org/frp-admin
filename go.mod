@@ -3,9 +3,11 @@ module frp-admin
 go 1.20
 
 require (
+	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-redis/redis/v8 v8.11.5
-	github.com/golang-jwt/jwt/v4 v4.5.0
+	github.com/goccy/go-json v0.10.2
+	github.com/golang-jwt/jwt/v4 v4.5.1
 	github.com/nacos-group/nacos-sdk-go v1.1.4
 	github.com/pquerna/otp v1.4.0
 	github.com/swaggo/files v1.0.1
@@ -22,7 +24,6 @@ require (
 	github.com/KyleBanks/depth v1.2.1 // indirect
 	github.com/PuerkitoBio/purell v1.1.1 // indirect
 	github.com/PuerkitoBio/urlesc v0.0.0-20170810143723-de5bf2ad4578 // indirect
-	github.com/aliyun/alibaba-cloud-sdk-go v1.61.18 // indirect
 	github.com/boombuler/barcode v1.0.1-0.20190219062509-6c824513bacc // indirect
 	github.com/buger/jsonparser v1.1.1 // indirect
 	github.com/bytedance/sonic v1.9.1 // indirect
@@ -40,7 +41,6 @@ require (
 	github.com/go-playground/universal-translator v0.18.1 // indirect
 	github.com/go-playground/validator/v10 v10.14.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
-	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/jmespath/go-jmespath v0.0.0-20180206201540-c2b33e8439af // indirect
