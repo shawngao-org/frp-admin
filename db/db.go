@@ -5,6 +5,7 @@ import (
 	"frp-admin/config"
 	"frp-admin/entity"
 	"frp-admin/logger"
+	"frp-admin/util"
 	"github.com/aliyun/alibaba-cloud-sdk-go/sdk/utils"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -80,15 +81,19 @@ func CheckAndCreateTables() {
 				Db.Create(&defaultGroup)
 			}
 			if k == "users" {
+				passwd, err := util.PasswordEncrypt(config.Conf.Data.InitUserPassword)
+				if err != nil {
+					logger.LogErr("Password encrypt failed.")
+				}
 				defaultUser := entity.User{
 					Model:        gorm.Model{},
 					Id:           utils.NewUUID().String(),
 					Name:         "admin",
 					Email:        "admin@example.com",
-					Password:     config.Conf.Data.GroupId,
+					Password:     passwd,
 					TotpKey:      "",
 					IsValid:      true,
-					RegisterTime: time.Time{},
+					RegisterTime: time.Now(),
 					Ip:           "127.0.0.1",
 					Key:          "",
 					GroupId:      config.Conf.Data.GroupId,
@@ -99,7 +104,7 @@ func CheckAndCreateTables() {
 	}
 }
 
-func ReinitializeDatabase() {
+func DeleteDatabaseTables() {
 	for k, v := range Tables {
 		if Db.Migrator().HasTable(k) {
 			logger.LogWarn("Deleting table [%s] ...", k)
@@ -111,5 +116,4 @@ func ReinitializeDatabase() {
 			logger.LogSuccess("Table [%s] has been deleted.", k)
 		}
 	}
-	CheckAndCreateTables()
 }

@@ -37,15 +37,15 @@ func GetCliArgs() map[string]Cmd {
 			logger.LogInfo("%-20s%-10s", k, v.Description)
 		}
 	}}
-	args["--re-init-db"] = Cmd{"[Danger] Reinitialize the database.", func(a ...any) {
-		db.ReinitializeDatabase()
+	args["--remove-tables"] = Cmd{"[Danger] Reinitialize the database (Delete all tables).", func(a ...any) {
+		db.DeleteDatabaseTables()
 	}}
 	return args
 }
 
 func CommandHandler() {
 	args := os.Args[1:]
-	if len(args) <= 2 {
+	if len(args) < 1 {
 		return
 	}
 	for _, v := range args {
